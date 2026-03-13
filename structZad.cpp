@@ -11,6 +11,11 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
+    struct students
+    {
+        int id;
+        string name,surname;
+    };
     
     return 0;
 }
