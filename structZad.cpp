@@ -4,7 +4,6 @@
 */
 
 #include <iostream>
-#include <vector>
 #include <fstream>
 #include <string>
 
@@ -18,20 +17,34 @@ int main(int argc, char const *argv[])
         string name,surname;
     };
 
+    //Wypisywanie danych z pliku i zapamiętywanie ostatniego id
+    int lastStudentId = 0;
+    ifstream studentData;
+    studentData.open("student_data.txt");
+    string x = "";
+    while(studentData >> x){
+        lastStudentId = stoi(x);
+        cout<<"ID: "<<x<<" - ";
+        studentData >> x; cout<<"Imie i Nazwisko: "<<x<<" ";
+        studentData >> x; cout<<x<<endl;
+    }
+    studentData.close();
+
     //Pętla z wyborem zapisu i czytania z pliku
     string checkIntent = "K";
     while(true){
-        cout<<"Chcesz wpisac uczniow czy czytac uczniow z pliku? (W/C)"<<endl;
+        cout<<"Chcesz wpisac uczniow? (T/N) ";
         cin>>checkIntent;
-        if(checkIntent == "W" || checkIntent == "C"){
+        if(checkIntent == "T" || checkIntent == "N"){
             break;
         }
+        cout<<" ";
     }
 
-    //Wypisywanie danych z pliku i zapamiętywanie ostatniego id
-    int lastStudentId = 0;
+    /*
     if(checkIntent == "C"){
-        ifstream studentData("student_data.txt");
+        ifstream studentData;
+        studentData.open("student_data.txt");
         string x = "";
         while(studentData >> x){
             lastStudentId = stoi(x);        //TODO refactor for this value
@@ -40,14 +53,13 @@ int main(int argc, char const *argv[])
             studentData >> x; cout<<"Nazwisko: "<<x<<endl;
         }
         studentData.close();
-    }
+    }*/
     
     //Wypełnianie danych do wpisania poprzez vector
-    if(checkIntent == "W"){
+    if(checkIntent == "T"){
         cout<<"Ile studentow do wpisania?"<<endl;
         int studentsNumber;
         cin>>studentsNumber;
-        vector<student> studentsToWrite;
         for(int i = 1; i <= studentsNumber; i++){
             while(true){
                 student newStudent;
@@ -56,17 +68,17 @@ int main(int argc, char const *argv[])
                 cout<<"Nazwisko: "; cin>>newStudent.surname;
                 cout<<"Student nr."<<newStudent.id<<" "<<newStudent.name<<" "<<newStudent.surname<<endl;
                 string confirmation = "K";
-                cout<<"Czy to poprawne? (T/N)";
+                cout<<"Czy to poprawne? (T/N) ";
                 while(true){
                     cin>>confirmation;
                     if(confirmation == "T" || confirmation == "N"){
                         break;
                     }
                 }
-                if(confirmation == "T"){
-                    fstream studentData("student_data.txt", ios_base::app);     //TODO not writing out into the file
+                if(!confirmation.compare("T")){
+                    fstream studentData;
+                    studentData.open("student_data.txt", ios_base::app);
                     studentData<<newStudent.id;
-                    studentData<<"Writeout check";      //This one does not work as well...
                     studentData<<" ";
                     studentData<<newStudent.name;
                     studentData<<" ";
@@ -74,7 +86,7 @@ int main(int argc, char const *argv[])
                     studentData.close();
                     break;
                 }
-                if(confirmation == "N"){
+                if(!confirmation.compare("N")){
                     cout<<"Prosze ponownie wstawic dane:"<<endl;
                 }
             }
