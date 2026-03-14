@@ -1,0 +1,1 @@
+Z jakiegoś powodu VSCode wyrzuca mi błąd z powodu złego argumentu podczas kompilacji ale wciąż kompiluje poprawnie. W razie takich samych problemów polecam skorzystać z już skompilowanego .exe w tym folderze.

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -40,26 +41,13 @@ int main(int argc, char const *argv[])
         }
         cout<<" ";
     }
-
-    /*
-    if(checkIntent == "C"){
-        ifstream studentData;
-        studentData.open("student_data.txt");
-        string x = "";
-        while(studentData >> x){
-            lastStudentId = stoi(x);        //TODO refactor for this value
-            cout<<"ID: "<<x<<endl;
-            studentData >> x; cout<<"Imie: "<<x<<endl;
-            studentData >> x; cout<<"Nazwisko: "<<x<<endl;
-        }
-        studentData.close();
-    }*/
     
-    //Wypełnianie danych do wpisania poprzez vector
+    //Wypełnianie danych do wpisania poprzez vector i zapisywnie ich do pliku           (mam wrazenie ze lepiej by to dzialalo bez vectora wiec dodałem potwierdzenie czy dane sie zgadzają żeby nadać sensu istnienia temu vectorowi)
     if(checkIntent == "T"){
         cout<<"Ile studentow do wpisania?"<<endl;
         int studentsNumber;
         cin>>studentsNumber;
+        vector<student> students;//<--- temu vectorowi
         for(int i = 1; i <= studentsNumber; i++){
             while(true){
                 student newStudent;
@@ -76,7 +64,10 @@ int main(int argc, char const *argv[])
                     }
                 }
                 if(!confirmation.compare("T")){
-                    fstream studentData;
+                    students.push_back(newStudent);
+                    break;
+                    //Ten kod znajdował się tutaj przed wpisywaniem do vectora i wpisywał wprost bez końcowego potwierdzenia
+                    /*fstream studentData;
                     studentData.open("student_data.txt", ios_base::app);
                     studentData<<newStudent.id;
                     studentData<<" ";
@@ -84,11 +75,32 @@ int main(int argc, char const *argv[])
                     studentData<<" ";
                     studentData<<newStudent.surname<<endl;
                     studentData.close();
-                    break;
+                    break;*/
                 }
                 if(!confirmation.compare("N")){
                     cout<<"Prosze ponownie wstawic dane:"<<endl;
                 }
+            }
+        }
+        for(auto s:students){
+            cout<<"ID: "<<s.id<<" - "<<s.name<<" "<<s.surname<<endl;
+        }
+        cout<<"Czy te dane sie zgadzaja? (T/N) ";
+        string fullCorrectness = "K";
+        while(true){
+            cin>>fullCorrectness;
+            if(fullCorrectness == "T"){
+                for(auto s:students){
+                    fstream studentData;
+                    studentData.open("student_data.txt", ios_base::app);
+                    studentData<<s.id<<" "<<s.name<<" "<<s.surname<<endl;
+                    studentData.close();
+                }
+                break;
+            }
+            if(fullCorrectness == "N"){
+                cout<<"Dane nie zostaly zapisane i program zostanie zamkniety.";
+                break;
             }
         }
     }
